@@ -1,0 +1,89 @@
+{% extends 'base_index.html' %} 
+{% load static %}
+{% load currency_filters %}
+{% load general_pagination %}
+
+
+{% block content %} 
+<section class="ftco-section ftco-cart">
+    <div class="container">
+        <form action="{% url 'penjualan_insert' %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 ftco-animate">
+                    <div class="cart-list">
+                        <table class="table">
+                            <thead class="thead-primary">
+                            <tr class="text-center">
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in dataset %}
+                                <tr class="text-center">
+                                    <td class="product-remove"><a href="{% url 'keranjang_delete' data.id %}" onclick="return  confirm('Apakah anda yakin?');"><span class="ion-ios-close"></span></a></td>
+                                    
+                                    <td class="image-prod"><div class="img" style="background-image:url('{{ data.image }}');"></div></td>
+                                    
+                                    <td class="product-name">
+                                        <input type="text" name="id_cart[]" value="{{ data.id }}" style="display: none;">
+                                        <input type="text" name="total_cart[]" value="{{ data.total_harga }}" style="display: none;">
+                                        <h3>{{ data.produk }}</h3>
+                                        <p>{{ data.produk_deskripsi }}</p>
+                                    </td>
+                                    
+                                    <td class="price">{{ data.harga|currency }}</td>
+                                    
+                                    <td class="quantity">
+                                        <div class="input-group mb-3">
+                                        <input type="number" name="quantity" class="quantity form-control input-number" value="{{ data.jumlah }}" min="1" max="100" readonly>
+                                    </div>
+                                </td>
+                                    
+                                    <td class="total">{{ data.total_harga|currency }}</td>
+                                </tr>
+                            
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-start">
+                <div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
+                    <div class="cart-total mb-3">
+                        <h3>Total Bayar</h3>
+                        <!-- <p class="d-flex">
+                            <span>Subtotal</span>
+                            <span>$20.60</span>
+                        </p>
+                        <p class="d-flex">
+                            <span>Delivery</span>
+                            <span>$0.00</span>
+                        </p>
+                        <p class="d-flex">
+                            <span>Discount</span>
+                            <span>$3.00</span>
+                        </p>
+                        <hr> -->
+                        <p class="d-flex total-price">
+                            <input type="text" name="total_harga" value="{{ bayar }}" style="display: none;">
+                            <span>Total</span>
+                            <span>{{ bayar|currency }}</span>
+                        </p>
+                    </div>
+                    {% if bayar %}
+                    <p class="text-center"><button type="submit" class="btn btn-primary py-3 px-4">Bayar</button></p>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

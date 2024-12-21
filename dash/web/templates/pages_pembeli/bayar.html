@@ -1,0 +1,53 @@
+{% extends 'base_index.html' %} 
+{% block content %}
+
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <form
+        action="{% url 'penjualan_upload_bukti_bayar' data.id %}"
+        class="billing-form"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+      {% csrf_token %}
+        <div class="col-xl-10 ftco-animate">
+          <h3 class="mb-4 billing-heading">
+            Dalam waktu 24 jam pembelian akan dibatalkan apabila tidak upload
+            bukti transfer
+          </h3>
+          <div class="row align-items-end">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="firstname">Bukti Transfer</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  name="bukti_transfer"
+                  placeholder=""
+                />
+              </div>
+            </div>
+          </div>
+          <!-- END -->
+
+          <div class="row mt-5 pt-3 d-flex">
+            <div class="col-md-6">
+              <div class="cart-detail bg-light p-3 p-md-4">
+                <p>
+                  <button type="submit" class="btn btn-primary py-3 px-4">
+                    Upload
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- .col-md-8 -->
+      </form>
+    </div>
+  </div>
+</section>
+<!-- .section -->
+
+{% endblock %}

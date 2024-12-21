@@ -1,0 +1,107 @@
+{% extends 'base_index.html' %} 
+{% load static %} 
+{% load currency_filters %} 
+{% load general_pagination %} 
+
+{% block content %}
+<section class="ftco-section ftco-cart">
+  <div class="container">
+      <div class="row">
+        <div class="col-md-12 ftco-animate">
+          <div class="cart-list">
+            <table class="table">
+              <thead class="thead-primary">
+                <tr class="text-center">
+                  <th>&nbsp;</th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for data in dataset %}
+                <tr class="text-center">
+
+                  <td class="image-prod">
+                    <div
+                      class="img"
+                      style="background-image:url('{{ data.toko.foto_thum.url }}');"
+                    ></div>
+                  </td>
+
+                  <td class="product-name">
+                    <h3>{{ data.toko.produk.nama }}</h3>
+                    <p>{{ data.toko.produk.deskripsi }}</p>
+                  </td>
+
+                  <td class="price">{{ data.harga_satuan|currency }}</td>
+
+                  <td class="quantity">
+                    {{ data.jumlah }}
+                  </td>
+
+                  <td class="total">{{ data.total_harga|currency }}</td>
+                  <td class="quantity">
+                    {% if data.penjualan.bukti_transfer %}
+                        {% if data.penjualan.status == -1 %}
+                        <span class="badge bg-danger">Batal</span>
+                        {% endif %}
+                        {% if data.penjualan.status == 0 %}
+                        <span class="badge bg-warning">Proses</span>
+                        {% endif %}
+                        {% if data.penjualan.status == 1 %}
+                        <span class="badge bg-warning">Packing</span>
+                        {% endif %}
+                        {% if data.penjualan.status == 2 %}
+                        <span class="badge bg-primary">Kirim</span>
+                        {% endif %}
+                        {% if data.penjualan.status == 100 %}
+                        <span class="badge bg-success">Selesai</span>
+                        {% endif %}
+                    {% else %}
+                    <a href="{% url 'upload_bb' data.penjualan.id %}" class="btn btn-success">Upload bukti bayar</a>
+                    {% endif %}
+                  </td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-5">
+        <div class="col text-center">
+          <div class="block-27">
+            <ul>
+              {% if dataset.has_previous %}
+              
+              <li><a href="?{% query_transform page=dataset.previous_page_number  %}">&lt;</a></li>
+              {% else %}
+              <li class="disabled"><a href="javascript:void(0)">&lt;</a></li>
+              {% endif %}
+
+              {% for i in dataset.paginator.page_range %}
+                  {% if dataset.number == i %}
+                  <li class="active"><span>{{dataset.number}}</span></li>
+                  {% elif i > dataset.number|add:'-5' and i < dataset.number|add:'5' %}
+                  <li><a href="?{% query_transform page=i  %}">{{ i }}</a></li>
+                  {% endif %}
+              {% endfor %}
+              
+              {% if dataset.has_next %}
+                  <li><a href="?{% query_transform page=dataset.next_page_number %}">&gt;</a></li>
+              {% else %}
+                  <li class="disabled"><a href="javascript:void(0)">&gt;</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+{% endblock %}
